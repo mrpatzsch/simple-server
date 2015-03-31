@@ -1,37 +1,64 @@
-// Use require to get access to the Node
-// http library and store it in a variable.
-var http = require("http");
+// At the top of our file we declare variables
+// for all of the packages we're going to use
+// in the file. For this example, we'll only need
+// be using a single package called 'express'.
+// We `require('express')` and save the results
+// in an appropriately named variable.
 
-// Define a function doStuff that take in two
-// parameters, one for the request called req,
-// and one for the response called res.
+var express = require('express');
 
-var doStuff = function(req, res) {
+// Next we declare a variable that instantiates
+// the express server. Common names for this
+// variable include `app` or `server`. We're
+// going to call it `app` because that's what
+// they do in the express documentation.
 
-  // Writes the Head of the response with status
-  // code 200, specifying that the request is OK,
-  // and the body of the response will be given
-  // in plain text
+var app = express();
 
-  res.writeHead(200, {"Content-Type": "text/plain"});
+// Now that we have an app to build off of,
+// we should set up some routes.
 
-  // Writes the body of the response with the content
-  // 'Hello World'
+// The pattern for setting up routes in express is as follows
+// 
+// app . HTTP-VERB ( '/ROUTE/PATH/DELIMITED/BY/SLASHES' , function(req,res) { // DO STUFF HERE // });
 
-  res.write("Hello World");
 
-  // Send the response back
+// Our first route will be `GET /` which will respond
+// with "Hello World" for every request that
+// comes in to your server.
+app.get("", function(req, res) {
+  res.send("<h1>This is Andrew's Calculator!<h1><p>Put /add/x/y, /subtract/x/y, /divide/x/y, or /multiply/x/y to use.");
+});
 
-  res.end();
-};
+app.get('/add/:x/:y', function(req, res) {
+  var x = Number(req.params.x);
+  var y = Number(req.params.y);
+  var sum = x + y;
+  res.send("Sum is " + sum);
+});
 
-// Creates a server with the doStuff function
-// that will respond to requests and send responses
-// as specified.
+app.get('/subtract/:x/:y', function(req, res) {
+  var x = Number(req.params.x);
+  var y = Number(req.params.y);
+  var subtract = x - y;
+    res.send("Subtraction is " + subtract);
+});
 
-var server = http.createServer(doStuff);
+app.get('/divide/:x/:y', function(req, res) {
+  var x = Number(req.params.x);
+  var y = Number(req.params.y);
+  var divide = x / y;
+    res.send("Division is " + divide);
+});
 
-// Tell the server to start listening for request on
-// port 3000
+app.get('/multiply/:x/:y', function(req, res) {
+  var x = Number(req.params.x);
+  var y = Number(req.params.y);
+  var multiply = x * y;
+    res.send("Multiplication is " + multiply);
+});
 
-server.listen(3000);
+// Tell the app to start listening for
+// requests on port 3000.
+
+app.listen(3000);
